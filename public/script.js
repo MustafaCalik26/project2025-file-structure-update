@@ -4,7 +4,7 @@ const resultP = document.getElementById('result');
 const guessBtn = document.getElementById('guessBtn');
 const newWordBtn = document.getElementById('newWordBtn');
 
-const API = 'http://localhost:8080/api'; 
+const API = 'http://localhost:8080/api';
 
 async function fetchWord() {
   try {
@@ -14,7 +14,7 @@ async function fetchWord() {
     resultP.textContent = '';
     guessInput.value = '';
   } catch (error) {
-    resultP.textContent = 'Sunucuya bağlanırken hata oluştu.';
+    resultP.textContent = 'An error occurred while connecting to the server.';
     console.error(error);
   }
 }
@@ -26,14 +26,16 @@ async function sendGuess() {
   try {
     const res = await fetch(`${API}/guess`, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: guess
+      headers: { 'Content-Type': 'application/json' },  
+      body: JSON.stringify({ guess })
     });
+    if (!res.ok) throw new Error('Guess submission failed');
+
     const text = await res.text();
     resultP.textContent = text;
   } catch (error) {
-    resultP.textContent = 'Sunucuya bağlanırken hata oluştu.';
-    console.error(error);
+    resultP.textContent = 'An error occurred while connecting to the server';
+    console.error('Guess error:', error);
   }
 }
 

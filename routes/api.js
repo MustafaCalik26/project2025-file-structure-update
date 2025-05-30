@@ -1,35 +1,38 @@
 import express from 'express';
+import Word from '../models/Word.js';
+import { shuffle } from '../utils/puzzle.js';
+
 const router = express.Router();
 
-const wordList = ["elma", "araba", "kitap", "bilgisayar", "masa", "kalem", "sigara", "mercedes", "televizyon", "sandalye", "hesap makinesi", "galatasaray"];
 let currentPuzzle = null;
 
-function shuffle(word) {
-  let arr = word.split('');
-  while (true) {
-    let shuffled = arr.sort(() => Math.random() - 0.5).join('');
-    if (shuffled !== word) return shuffled;
+router.get('/word', async (req, res) => {
+  try {
+    const count = await Word.countDocuments();
+    if (count === 0) return res.status(404).send("No words found in database");
+
+    const random = Math.floor(Math.random() * count);
+    const wordDoc = await Word.findOne().skip(random);
+
+    currentPuzzle = wordDoc.original;
+    const scrambled = shuffle(wordDoc.original);
+
+    res.send(scrambled);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
-}
-
-function getRandomPuzzle() {
-  const original = wordList[Math.floor(Math.random() * wordList.length)];
-  const scrambled = shuffle(original);
-  return { original, scrambled };
-}
-
-router.get('/word', (req, res) => {
-  currentPuzzle = getRandomPuzzle();
-  res.send(currentPuzzle.scrambled);
 });
 
 router.post('/guess', (req, res) => {
-  const guess = req.body.trim().toLowerCase();
+  const guess = req.body.guess?.trim().toLowerCase();
   if (!currentPuzzle) return res.status(400).send("Please get a word first.");
-  if (guess === currentPuzzle.original) {
-    res.send("Doğru! 🎉");
+  if (!guess) return res.status(400).send("Please send a guess.");
+
+  if (guess === currentPuzzle.toLowerCase()) {
+    res.send("Correct Answer 🎉");
   } else {
-    res.send(`Yanlış. Doğru cevap: ${currentPuzzle.original}`);
+    res.send(`False. Correct Answer Is: ${currentPuzzle}`);
   }
 });
 
