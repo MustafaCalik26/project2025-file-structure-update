@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/wordgame', {
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());    // 
+app.use(express.json());     
 app.use(express.text()); // for parsing plain text in request body and json
 
 
