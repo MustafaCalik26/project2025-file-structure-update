@@ -1,15 +1,18 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import mongoose from 'mongoose';           
+import mongoose from 'mongoose';
+import dotenv from 'dotenv'; 
 import apiRouter from './routes/api.js';
+
+dotenv.config(); 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = 8080;
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/wordgame', {
+// I now added the  env variable to connect to look more proffesional
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -17,12 +20,10 @@ mongoose.connect('mongodb://localhost:27017/wordgame', {
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());     
-app.use(express.text()); // for parsing plain text in request body and json
-
+app.use(express.json());
+app.use(express.text());
 
 app.use('/api', apiRouter);
-
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
