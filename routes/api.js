@@ -24,12 +24,23 @@ router.get('/word', async (req, res) => {
   }
 });
 
-router.post('/guess', (req, res) => {
+router.post('/guess', async (req, res) => {
   const guess = req.body.guess?.trim().toLowerCase();
   if (!currentPuzzle) return res.status(400).send("Please get a word first.");
   if (!guess) return res.status(400).send("Please send a guess.");
 
-  if (guess === currentPuzzle.toLowerCase()) {
+  if (guess === currentPuzzle.toLowerCase())
+
+
+    //I wanted to add a system to save the guesses made by the user to DB
+    try {
+    await Guess.create({ guess, correct: isCorrect });
+  } catch (err) {
+    console.error('Error saving guess:', err);
+  }
+
+
+    if (isCorrect){
     res.send("Correct Answer 🎉");
   } else {
     res.send(`False. Correct Answer Is: ${currentPuzzle}`);
