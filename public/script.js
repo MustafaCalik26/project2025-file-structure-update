@@ -35,7 +35,18 @@ async function fetchHint() {
     console.error('Hint error:', error);
   }
 }
+document.getElementById('adminLink').addEventListener('click', function (e) {
+    e.preventDefault();
 
+    const password = prompt("Enter admin password:");
+    const correctPassword = "Mustafa09"; 
+
+    if (password === correctPassword) {
+      window.location.href = "admin-login.html"; //Acces if correct
+    } else if (password !== null) {
+      alert("Incorrect password!");
+    }
+  });
 
 async function sendGuess() {
   const guess = guessInput.value.trim();
