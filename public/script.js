@@ -3,6 +3,8 @@ const guessInput = document.getElementById('guessInput');
 const resultP = document.getElementById('result');
 const guessBtn = document.getElementById('guessBtn');
 const newWordBtn = document.getElementById('newWordBtn');
+const hintBtn = document.getElementById('hintBtn');
+const hintDisplay = document.getElementById('hintDisplay');
 
 const API = 'http://localhost:8080/api';
 
@@ -18,6 +20,22 @@ async function fetchWord() {
     console.error(error);
   }
 }
+async function fetchHint() {
+  try {
+    const res = await fetch(`${API}/hint`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      hintDisplay.textContent = `Error: ${errorText}`;
+      return;
+    }
+    const hint = await res.text();
+    hintDisplay.textContent = `Hint: ${hint}`;
+  } catch (error) {
+    hintDisplay.textContent = 'Error fetching hint.';
+    console.error('Hint error:', error);
+  }
+}
+
 
 async function sendGuess() {
   const guess = guessInput.value.trim();
@@ -42,3 +60,4 @@ async function sendGuess() {
 guessBtn.addEventListener('click', sendGuess);
 newWordBtn.addEventListener('click', fetchWord);
 document.addEventListener('DOMContentLoaded', fetchWord);
+hintBtn.addEventListener('click', fetchHint);
