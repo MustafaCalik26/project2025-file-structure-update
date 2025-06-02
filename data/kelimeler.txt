@@ -55,3 +55,4 @@ teknoloji
 yazılım
 program
 tasarım
+hitatek
