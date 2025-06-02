@@ -51,6 +51,13 @@ async function sendGuess() {
 
     const text = await res.text();
     resultP.textContent = text;
+     if (text.toLowerCase().includes("correct")) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
   } catch (error) {
     resultP.textContent = 'An error occurred while connecting to the server';
     console.error('Guess error:', error);
