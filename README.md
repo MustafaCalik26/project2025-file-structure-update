@@ -8,7 +8,7 @@ Prerequisites
 
 -Node.js (v14 or higher recommended)
 
--MongoDB running locally or a MongoDB Atlas account
+-MongoDB running locally 
 
 -express hast to be version 4.x does not work with 5.x
 
@@ -23,7 +23,11 @@ Installation
 
 Usage
 
+-Start the server
+
 -Open your browser and go to: http://localhost:8080
+
+-Use the webpage to play
 
 Testing With Postman
 
@@ -32,3 +36,27 @@ Returns a scrambled word.(plain text)
 
 -POST /api/guess
 Send your guess in the request body (JSON with guess field).
+
+-GET /api/hint
+Returns a hint for the current word 
+
+Features
+
+-Scrambled word generation
+
+-Basic webpage that allows users to view 
+
+-Hint system
+
+-Guesses are saved in MongoDB for review
+
+-You can manage words directly using MongoDB Compass
+
+-Can handle errors
+
+Future Features
+
+-Admin panel to add/edit/delete words
+
+-More advanced hints 
+
