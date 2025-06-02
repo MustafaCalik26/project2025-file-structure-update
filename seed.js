@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 import Word from './models/Word.js';
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 
 const words = [
   "elma", "araba", "kitap", "bilgisayar", "masa", "kalem",
@@ -9,7 +13,7 @@ const words = [
 
 async function seed() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/wordgame');
+    await mongoose.connect(process.env.MONGODB_URI);
     await Word.deleteMany({});
     await Word.insertMany(words.map(w => ({ original: w })));
     console.log("✅ Seeded database with words");
