@@ -1,0 +1,10 @@
+User: Review
+Password:I3IFtCLQfKmAYe2l
+
+For sure that you know how it works but it wouldnt be a mistake to add this.
+You have to create a .env file an paste the URI beneath
+                        ↓
+                        ↓
+                        ↓
+                        ↓
+MONGODB_URI="mongodb+srv://Review:I3IFtCLQfKmAYe2l@word-game-db.r2nlxja.mongodb.net/wordgame?retryWrites=true&w=majority&appName=word-game-db"
