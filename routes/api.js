@@ -1,4 +1,3 @@
-
 import express from 'express';
 import Word from '../models/Word.js';
 import { shuffle } from '../utils/puzzle.js';
@@ -8,6 +7,14 @@ const router = express.Router();
 
 let currentPuzzle = null;
 
+
+
+//Ive gotten help from a 4th year to implement the admin panel part
+//You can see guesses and see if its true or not
+
+
+
+// GET /word - Get a random word based on difficulty
 router.get('/word', async (req, res) => {
   try {
     const difficulty = req.query.difficulty || 'easy';
@@ -43,7 +50,10 @@ router.get('/word', async (req, res) => {
     console.error(err);
     res.status(500).send("Server error");
   }
-  router.get('/hint', (req, res) => {
+});
+
+// GET /hint - Get a hint for the current puzzle
+router.get('/hint', (req, res) => {
   if (!currentPuzzle) {
     return res.status(400).send("Please get a word first.");
   }
@@ -52,6 +62,7 @@ router.get('/word', async (req, res) => {
   res.send(hint);
 });
 
+// POST /guess - Submit a guess
 router.post('/guess', async (req, res) => {
   const guess = req.body.guess?.trim().toLowerCase();
   if (!currentPuzzle) return res.status(400).send("Please get a word first.");
@@ -68,8 +79,19 @@ router.post('/guess', async (req, res) => {
   if (isCorrect) {
     res.send("Correct Answer 🎉");
   } else {
-    res.send(`False. Correct Answer Is: ${currentPuzzle}`);
+    res.send(`False, Try Again (You Can Use Hint)`);
   }
 });
+
+// Admin route to get all guesses 
+router.get('/admin/guesses', async (req, res) => {
+  try {
+    const guesses = await Guess.find().sort({ createdAt: -1 });
+    res.json(guesses);
+  } catch (err) {
+    console.error('Error fetching guesses:', err);
+    res.status(500).send("Error retrieving guesses.");
+  }
 });
+
 export default router;

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin_Panel</title>
+    <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+
+<body>
+   <h1>Guess History</h1>
+  <table id="guess-table">
+    <thead>
+      <tr>
+        <th>Guess</th>
+        <th>Correct</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    </tbody>
+  </table>
+<script>
+    async function fetchGuesses() {
+      try {
+       const response = await fetch('/api/admin/guesses');
+        const data = await response.json();
+
+        const tbody = document.querySelector('#guess-table tbody');
+        tbody.innerHTML = ''; 
+
+        data.forEach(entry => {
+          const row = document.createElement('tr');
+
+          const guessCell = document.createElement('td');
+          guessCell.textContent = entry.guess;
+          row.appendChild(guessCell);
+
+          const correctCell = document.createElement('td');
+          correctCell.textContent = entry.correct ? '✅' : '❌';
+          row.appendChild(correctCell);
+
+          const dateCell = document.createElement('td');
+          dateCell.textContent = new Date(entry.createdAt).toLocaleString();
+          row.appendChild(dateCell);
+
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching guesses:', error);
+      }
+    }
+
+    // Load guesses on page load
+    fetchGuesses();
+  </script>
+</body>
+
+</html>

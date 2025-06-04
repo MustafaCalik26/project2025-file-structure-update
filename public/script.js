@@ -54,7 +54,7 @@ document.getElementById('adminLink').addEventListener('click', function (e) {
   const correctPassword = "Mustafa09";
 
   if (password === correctPassword) {
-    window.location.href = "admin-login.html";
+    window.location.href = "admin.html";
   } else if (password !== null) {
     alert("Incorrect password!");
   }

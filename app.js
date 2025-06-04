@@ -24,6 +24,11 @@ app.use(express.json());
 app.use(express.text());
 
 app.use('/api', apiRouter);
+// Serve the admin.html directly when user visits 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
