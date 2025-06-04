@@ -8,18 +8,29 @@ const hintDisplay = document.getElementById('hintDisplay');
 
 const API = 'http://localhost:8080/api';
 
+let selectedDifficulty = 'easy'; // default
+
+document.querySelectorAll('#difficultySelector button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedDifficulty = btn.dataset.difficulty;
+    fetchWord(); 
+  });
+});
+
 async function fetchWord() {
   try {
-    const res = await fetch(`${API}/word`);
+    const res = await fetch(`${API}/word?difficulty=${selectedDifficulty}`);
     const text = await res.text();
     scrambledDiv.textContent = text;
     resultP.textContent = '';
     guessInput.value = '';
+    hintDisplay.textContent = ''; // reset hint
   } catch (error) {
     resultP.textContent = 'An error occurred while connecting to the server.';
     console.error(error);
   }
 }
+
 async function fetchHint() {
   try {
     const res = await fetch(`${API}/hint`);
@@ -35,18 +46,19 @@ async function fetchHint() {
     console.error('Hint error:', error);
   }
 }
+
 document.getElementById('adminLink').addEventListener('click', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const password = prompt("Enter admin password:");
-    const correctPassword = "Mustafa09"; 
+  const password = prompt("Enter admin password:");
+  const correctPassword = "Mustafa09";
 
-    if (password === correctPassword) {
-      window.location.href = "admin-login.html"; //Acces if correct
-    } else if (password !== null) {
-      alert("Incorrect password!");
-    }
-  });
+  if (password === correctPassword) {
+    window.location.href = "admin-login.html";
+  } else if (password !== null) {
+    alert("Incorrect password!");
+  }
+});
 
 async function sendGuess() {
   const guess = guessInput.value.trim();
@@ -55,17 +67,18 @@ async function sendGuess() {
   try {
     const res = await fetch(`${API}/guess`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },  
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ guess })
     });
     if (!res.ok) throw new Error('Guess submission failed');
 
     const text = await res.text();
     resultP.textContent = text;
-     if (text.toLowerCase().includes("correct")) {
+
+    if (text.toLowerCase().startsWith("correct")) {
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 200,
+        spread: 120,
         origin: { y: 0.6 }
       });
     }

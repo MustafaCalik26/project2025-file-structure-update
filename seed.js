@@ -5,12 +5,10 @@ import path from 'path';
 import fs from 'fs';
 
 dotenv.config();
-
 // const words =
 //  [ "elma", "araba", "kitap", "bilgisayar", "masa", "kalem", "sigara", "mercedes", "televizyon", "sandalye", "hesap makinesi", "galatasaray" ];
 //Bu sekile cok kotu gozkuyordu kod ben de bir text file ekleyip onun icine bir liste dizdim
 const filePath = path.resolve('./data/kelimeler.txt');
-
 
 const fileContent = fs.readFileSync(filePath, 'utf-8');
 const words = fileContent
@@ -18,14 +16,10 @@ const words = fileContent
   .map(w => w.trim())//text file da yanliskla kelime eklerken bosluk olursa silmesi icin ekledim ama olmadan da calisiyor test ettim
   .filter(w => w.length > 0);
 
-
-
-
-
 async function seed() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    await Word.deleteMany({});
+    await Word.deleteMany({}); // I am testing right now so i delete previous data stored always
     await Word.insertMany(words.map(w => ({ original: w })));
     console.log("✅ Seeded database with words");
     process.exit(0);
@@ -34,5 +28,4 @@ async function seed() {
     process.exit(1);
   }
 }
-
 seed();
