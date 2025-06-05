@@ -4,13 +4,15 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'; 
 import apiRouter from './routes/api.js';
+import cors from 'cors'; 
+
 
 dotenv.config(); 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = 8080;
-
+app.use(cors());
 // I now added the  env variable to connect to look more proffesional
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

@@ -17,6 +17,7 @@
   "author": "Mustafa Çalık",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.1.0",
     "mongodb": "4.0",

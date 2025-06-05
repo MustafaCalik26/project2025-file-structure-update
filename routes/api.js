@@ -3,6 +3,7 @@ import Word from '../models/Word.js';
 import { shuffle } from '../utils/puzzle.js';
 import Guess from '../models/Guess.js';
 
+
 const router = express.Router();
 
 let currentPuzzle = null;
@@ -55,7 +56,7 @@ const isCorrect = guess === currentPuzzle.toLowerCase();
     if (isCorrect){
     res.send("Correct Answer 🎉");
   } else {
-    res.send(`False. Correct Answer Is: ${currentPuzzle}`);
+    res.send(`False. Try Again Or Use Hint`);
   }
 });
 
