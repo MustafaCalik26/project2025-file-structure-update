@@ -35,10 +35,13 @@ Testing With Postman
 Returns a scrambled word.(plain text)
 
 -POST /api/guess
-Send your guess in the request body (JSON with guess field).
+Send your guess in the request body (JSON with guess field)
 
 -GET /api/hint
 Returns a hint for the current word 
+
+-POST/api/users
+Create new user
 
 Features
 
@@ -50,9 +53,9 @@ Features
 
 -Guesses are saved in MongoDB for review
 
--You can manage words directly using MongoDB Compass
-
 -Can handle errors
+
+-Can collect username
 
 Future Features
 
