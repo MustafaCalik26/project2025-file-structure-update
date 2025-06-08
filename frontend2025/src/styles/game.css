@@ -41,10 +41,12 @@ button {
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  
 }
 
 button:hover {
   background: #003366;
+  transform: translateY(-2px);
 }
 
 #result {

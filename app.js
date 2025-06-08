@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv'; 
 import apiRouter from './routes/api.js';
 import cors from 'cors'; 
+import usersRouter from './routes/users.js';
 
 
 dotenv.config(); 
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.text());
 
 app.use('/api', apiRouter);
+app.use('/api/users', usersRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
