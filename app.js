@@ -10,8 +10,14 @@ import cors from 'cors';
 import usersRouter from './routes/users.js';
 import loginRouter from './routes/login.js';
 import protectedRouter from './routes/protected.js';
+import redisClient from './utils/redis.js';
 
-
+redisClient.connect()
+  .then(() => console.log('✅ Connected to Redis'))
+  .catch(err => {
+    console.error('❌ Redis connection error:', err);
+    process.exit(1); // optional: exit app if Redis fails
+  });
 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

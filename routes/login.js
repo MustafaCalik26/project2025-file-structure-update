@@ -2,6 +2,8 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
+import redisClient from '../utils/redis.js';
+
 
 const router = express.Router();
 
@@ -19,18 +21,28 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Username and password required' });
   }
 
+  const redisKey = `login:attempts:${username}`;
+  const attempts = parseInt(await redisClient.get(redisKey)) || 0;
+  if (attempts >= 5) {
+    return res.status(429).json({
+      error: 'Too many login attempts. Please try again in a few minutes.',
+    });
+  }
+
   const user = await User.findOne({ username });
   if (!user) {
+    await redisClient.setEx(redisKey, 300, attempts + 1);
     return res.status(404).json({ error: 'User not found' });
   }
-// console.log('Login - incoming password', password);
-// console.log('Login - hash:', user.password);
+  // console.log('Login - incoming password', password);
+  // console.log('Login - hash:', user.password);
   const isMatch = await bcrypt.compare(password, user.password);
   console.log('Login - match :', isMatch);
   if (!isMatch) {
+    await redisClient.setEx(redisKey, 300, attempts + 1);
     return res.status(401).json({ error: 'Invalid password' });
   }
-
+  await redisClient.del(redisKey);
   const token = jwt.sign({ id: user._id, username: user.username }, SECRET, {
     expiresIn: '2h',
   });
