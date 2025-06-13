@@ -16,7 +16,7 @@ redisClient.connect()
   .then(() => console.log('✅ Connected to Redis'))
   .catch(err => {
     console.error('❌ Redis connection error:', err);
-    process.exit(1); // optional: exit app if Redis fails
+    process.exit(1); //  exit app if Redis fails
   });
 
 

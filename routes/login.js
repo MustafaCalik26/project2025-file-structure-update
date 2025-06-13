@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
 
   const user = await User.findOne({ username });
   if (!user) {
-    await redisClient.setEx(redisKey, 300, attempts + 1);
+    await redisClient.setEx(redisKey, 300, (attempts + 1).toString());
     return res.status(404).json({ error: 'User not found' });
   }
   // console.log('Login - incoming password', password);
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   console.log('Login - match :', isMatch);
   if (!isMatch) {
-    await redisClient.setEx(redisKey, 300, attempts + 1);
+    await redisClient.setEx(redisKey, 300, (attempts + 1).toString());
     return res.status(401).json({ error: 'Invalid password' });
   }
   await redisClient.del(redisKey);

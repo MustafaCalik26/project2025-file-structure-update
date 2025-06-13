@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
       user: { username: user.username }
     });
   } catch (err) {
-    await redisClient.setEx(redisKey, 300, attempts + 1);
+    await redisClient.setEx(redisKey, 300,(attempts + 1).toString());
     if (err.code === 11000) {
       return res.status(409).json({ error: 'Username already exists' });
     }
