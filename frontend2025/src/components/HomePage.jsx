@@ -14,8 +14,8 @@ export default function HomeForm() {
 
   const handleSubmit = async () => {
     if (!username.trim() || !password) return;
- if (handleSubmit.loading) return;
-  handleSubmit.loading = true;
+    if (isLoading) return;
+    setIsLoading(true);
     const endpoint = isLogin ? 'login' : 'users';
     try {
       const res = await axios.post(`http://localhost:8080/api/${endpoint}`, {
@@ -32,6 +32,9 @@ export default function HomeForm() {
       }
     } catch (error) {
       alert(error.response?.data?.error || 'Something went wrong.');
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
