@@ -1,3 +1,6 @@
 /* i dont get this part if i delete my site wont work 
 but even if its stays empty it works?*/
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Directives even if index css is empty */

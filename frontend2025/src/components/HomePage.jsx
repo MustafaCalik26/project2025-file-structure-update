@@ -1,15 +1,16 @@
-// components/HomeForm.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/Home.css';
+// import '../styles/Home.css';
 
-import { TextField, Button, Typography, Container, Stack } from '@mui/material';
+// import { TextField, Button, Typography, Container, Stack } from '@mui/material';
+//No need anymore 
 
 export default function HomeForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -33,49 +34,71 @@ export default function HomeForm() {
     } catch (error) {
       alert(error.response?.data?.error || 'Something went wrong.');
     }
-    finally{
+    finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 5 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        {isLogin ? 'Login' : 'Register'}
-      </Typography>
+    <div className="flex justify-center mt-20">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 space-y-6 border border-gray-200 flex flex-col items-center">
 
-      <Stack spacing={2}>
-        <TextField
-          label="Username"
-          variant="outlined"
-          fullWidth
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          fullWidth
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          {isLogin ? 'Login' : 'Register'}
+        </h2>
+        <div className="flex flex-col space-y-6 items-center">
+          {/* Dont Know why but cant add space between button and inputs  */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault(); // Prevent page refresh
+              handleSubmit();
+            }}
+            className="flex flex-col space-y-6 items-center"
+          >
+          {/*I added form just to be able to press enter */}
+        
+          <input
+            type="text"
+            placeholder="Username"
+            className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-        >
-          {isLogin ? 'Log In' : 'Register'}
-        </Button>
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-8"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <Button
-          variant="text"
-          onClick={() => setIsLogin(!isLogin)}
-        >
-          {isLogin ? "Don't have an account? Register" : 'Already have an account? Log in'}
-        </Button>
-      </Stack>
-    </Container>
+          <button
+            type='submit'
+            onClick={handleSubmit}
+            disabled={isLoading}
+            className={`w-72 py-2 text-white rounded-lg transition-colors duration-200 ${isLoading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+          >
+            {isLoading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
+          </button>
+          </form>
+        </div>
+
+        <p className="text-center text-sm text-gray-600">
+          {isLogin ? 'Don’t have an account?' : 'Already have an account?'}{' '}
+          <a
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-blue-600 hover:underline font-medium"
+          >
+            {isLogin ? 'Register' : 'Login'}
+          </a>
+        </p>
+      </div>
+    </div>
+    // I am no expert in styling so it does not look great tailwind is a bit complicated
+    //Mui is easier to use cause it has it own themes :D manually trying needs a bit creativity in design
   );
 }
