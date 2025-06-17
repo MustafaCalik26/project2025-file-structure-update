@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { login, register } from '../api/authApi';
 // import '../styles/Home.css';
 
 // import { TextField, Button, Typography, Container, Stack } from '@mui/material';
@@ -17,24 +17,20 @@ export default function HomeForm() {
     if (!username.trim() || !password) return;
     if (isLoading) return;
     setIsLoading(true);
-    const endpoint = isLogin ? 'login' : 'users';
-    try {
-      const res = await axios.post(`http://localhost:8080/api/${endpoint}`, {
-        username,
-        password
-      });
 
+    try {
       if (isLogin) {
+        const res = await login(username, password);
         localStorage.setItem('token', res.data.token);
         navigate('/game');
       } else {
+        await register(username, password);
         alert('Registration successful. You can now log in.');
         setIsLogin(true);
       }
     } catch (error) {
       alert(error.response?.data?.error || 'Something went wrong.');
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import confetti from 'canvas-confetti';
 import '../styles/game.css';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,12 +12,10 @@ import {
   Alert,
   Stack,
   Paper,
-  // InstagramIcon
 } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { Link } from '@mui/material';
-
-const API = 'http://localhost:8080/api';
+import { fetchWord, submitGuess, fetchHint } from '../api/gameApi'; // modüler api
 
 function WordGame() {
   const [guess, setGuess] = useState('');
@@ -27,11 +24,6 @@ function WordGame() {
   const queryClient = useQueryClient();
 
   // fetch word 
-  const fetchWord = async () => {
-    const res = await axios.get(`${API}/word`);
-    return res.data;
-  };
-
   const {
     data: scrambled,
     isLoading,
@@ -40,14 +32,10 @@ function WordGame() {
   } = useQuery({
     queryKey: ['word'],
     queryFn: fetchWord,
-  });;
-
+  });
 
   const guessMutation = useMutation({
-    mutationFn: async (userGuess) => {
-      const res = await axios.post(`${API}/guess`, { guess: userGuess });
-      return res.data;
-    },
+    mutationFn: submitGuess,
     onSuccess: (data) => {
       setResult(data);
 
@@ -70,15 +58,12 @@ function WordGame() {
   // get hint
   const {
     data: hint,
-    refetch: fetchHint,
+    refetch: fetchHintQuery,
     isFetching: hintLoading,
     isError: hintError,
   } = useQuery({
     queryKey: ['hint'],
-    queryFn: async () => {
-      const res = await axios.get(`${API}/hint`);
-      return `Hint: ${res.data}`;
-    },
+    queryFn: fetchHint,
     enabled: false,
   });
 
@@ -88,7 +73,6 @@ function WordGame() {
   }, []);
 
   return (
-    
     <Container maxWidth="sm" sx={{ mt: 5 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" sx={{ color: '#333', fontSize: 45, borderBottom: '2px solid black', pb: 2 }} gutterBottom>
@@ -134,17 +118,10 @@ function WordGame() {
         </Box>
 
         <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
-          {/* <Button
-            variant="contained"
-            color="primary"
-            onClick={() => guessMutation.mutate(guess)}
-          >
-            Guess
-          </Button> */}
           <Button variant="contained" onClick={() => fetchNewWord()}>
             New Word
           </Button>
-          <Button variant="contained" onClick={() => fetchHint()}>
+          <Button variant="contained" onClick={() => fetchHintQuery()}>
             Get Hint
           </Button>
         </Stack>
@@ -169,10 +146,9 @@ function WordGame() {
           mt: 4,
           pt: 2,
           textAlign: 'center',
-          
         }}
       >
-        <Typography variant="body1"  sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
+        <Typography variant="body1" sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
           Author: Mustafa Calik
         </Typography>
         <Link
@@ -185,7 +161,6 @@ function WordGame() {
         </Link>
       </Box>
     </Container>
-   
   );
 }
 
