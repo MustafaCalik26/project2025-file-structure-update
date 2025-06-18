@@ -1,0 +1,21 @@
+{
+  "title": "Kelime Tahmin Oyunu",
+  "scrambled": "Karışık Kelime",
+  "guess_here": "Tahmin et",
+  "guess": "Tahmin",
+  "new_word": "Yeni Kelime",
+  "get_hint": "İpucu Al",
+  "author": "Yazar: Mustafa Çalık",
+  "loading_hint": "İpucu yükleniyor...",
+  "error_loading_word": "Kelime yüklenirken hata",
+  "error_fetching_hint": "İpucu alınırken hata",
+  "login": "Giriş Yap",
+  "register": "Kayıt Ol",
+  "username": "Kullanıcı Adı",
+  "password": "Şifre",
+  "loading": "Yükleniyor...",
+  "no_account": "Hesabın yok mu?",
+  "have_account": "Zaten hesabın var mı?",
+  "registration_successful": "Kayıt başarılı. Artık giriş yapabilirsin.",
+  "something_went_wrong": "Bir şeyler ters gitti."
+}
