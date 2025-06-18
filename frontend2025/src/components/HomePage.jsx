@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { login, register } from '../api/authApi';
 import { useTranslation } from 'react-i18next';
 import { useLanguageFromUrl } from '../hooks/useEffect.js';
+
 
 
 // import { TextField, Button, Typography, Container, Stack } from '@mui/material';
@@ -15,7 +16,7 @@ export default function HomeForm() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-
+ const [searchParams] = useSearchParams(); 
    useLanguageFromUrl(i18n, searchParams);
 
   const handleSubmit = async () => {
