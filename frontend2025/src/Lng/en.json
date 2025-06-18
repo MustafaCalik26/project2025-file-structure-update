@@ -1,0 +1,21 @@
+{
+  "title": "Word Guessing Game",
+  "scrambled": "Scrambled Word",
+  "guess_here": "Guess here",
+  "guess": "Guess",
+  "new_word": "New Word",
+  "get_hint": "Get Hint",
+  "author": "Author: Mustafa Calik",
+  "loading_hint": "Loading hint...",
+  "error_loading_word": "Error loading word",
+  "error_fetching_hint": "Error fetching hint",
+  "login": "Login",
+  "register": "Register",
+  "username": "Username",
+  "password": "Password",
+  "loading": "Loading...",
+  "no_account": "Don’t have an account?",
+  "have_account": "Already have an account?",
+  "registration_successful": "Registration successful. You can now log in.",
+  "something_went_wrong": "Something went wrong."
+}

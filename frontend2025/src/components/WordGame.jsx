@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useLanguageFromUrl } from '../hooks/useEffect.js';
 import confetti from 'canvas-confetti';
 import '../styles/game.css';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -15,13 +18,21 @@ import {
 } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { Link } from '@mui/material';
-import { fetchWord, submitGuess, fetchHint } from '../api/gameApi'; // modüler api
+import { fetchWord, submitGuess, fetchHint } from '../api/gameApi'; //AXIOS IS GONE HERE
 
 function WordGame() {
+
   const [guess, setGuess] = useState('');
   const [result, setResult] = useState('');
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const difficulty = searchParams.get('difficulty') || 'easy';
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
+
+
+
+  useLanguageFromUrl(i18n, searchParams);
+
 
   // fetch word 
   const {
@@ -30,8 +41,10 @@ function WordGame() {
     isError,
     refetch: fetchNewWord,
   } = useQuery({
-    queryKey: ['word'],
-    queryFn: fetchWord,
+    queryKey: ['word', difficulty],
+    // queryFn: fetchWord,
+    queryFn: () => fetchWord(difficulty),//need arrow func cause were now giving a param
+
   });
 
   const guessMutation = useMutation({
@@ -75,12 +88,27 @@ function WordGame() {
   return (
     <Container maxWidth="sm" sx={{ mt: 5 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+          <Button onClick={() => i18n.changeLanguage('en')}>EN</Button>
+          <Button onClick={() => i18n.changeLanguage('tr')}>TR</Button>
+        </Box>
+        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+          <Button variant="contained" color="success" onClick={() => setSearchParams({ difficulty: 'easy' })}>
+            {t('easy')}
+          </Button>
+          <Button variant="contained" color="warning" onClick={() => setSearchParams({ difficulty: 'normal' })}>
+            {t('normal')}
+          </Button>
+          <Button variant="contained" color="error" onClick={() => setSearchParams({ difficulty: 'hard' })}>
+            {t('hard')}
+          </Button>
+        </Stack>
         <Typography variant="h4" sx={{ color: '#333', fontSize: 45, borderBottom: '2px solid black', pb: 2 }} gutterBottom>
-          Word Guessing Game
+          {t('title')}
         </Typography>
 
         <Typography variant="h6" gutterBottom>
-          Scrambled Word:
+          {t('scrambled')}
         </Typography>
 
         <Box sx={{
@@ -94,12 +122,12 @@ function WordGame() {
           width: 'fit-content',
           mx: 'auto',
         }}>
-          {isLoading ? <CircularProgress size={24} /> : isError ? 'Error loading word' : scrambled}
+          {isLoading ? <CircularProgress size={24} /> : isError ? t('error_loading_word') : scrambled}
         </Box>
 
         <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
           <TextField
-            label="Guess here"
+            label={t('guess_here')}
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
             sx={{ flexGrow: 1 }}
@@ -113,16 +141,16 @@ function WordGame() {
               '&:hover': { transform: 'translateY(-2px)' },
             }}
           >
-            Guess
+            {t('guess')}
           </Button>
         </Box>
 
         <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
           <Button variant="contained" onClick={() => fetchNewWord()}>
-            New Word
+            {t('new_word')}
           </Button>
           <Button variant="contained" onClick={() => fetchHintQuery()}>
-            Get Hint
+            {t('get_hint')}
           </Button>
         </Stack>
 
@@ -133,9 +161,9 @@ function WordGame() {
         )}
 
         {hintLoading ? (
-          <Typography variant="body2" sx={{ mt: 2 }}>Loading hint...</Typography>
+          <Typography variant="body2" sx={{ mt: 2 }}>{t('loading_hint')}</Typography>
         ) : hintError ? (
-          <Alert severity="error" sx={{ mt: 2 }}>Error fetching hint</Alert>
+          <Alert severity="error" sx={{ mt: 2 }}>{t('error_fetching_hint')}</Alert>
         ) : (
           hint && <Typography variant="body2" sx={{ mt: 2 }}>{hint}</Typography>
         )}
