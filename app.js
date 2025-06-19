@@ -14,12 +14,14 @@ import router from './routes/appUse.js';
 const app = express();
 const PORT = 8080;
 
-const corsOptions = {
-  origin: 'https://project2025-file-structure-update-5m9pv2k8e.vercel.app',
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: 'https://project2025-file-structure-update-5m9pv2k8e.vercel.app',
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: '*',
+}));
 app.use(express.json());
 app.use(router);
 
