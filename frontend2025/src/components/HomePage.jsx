@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { login, register } from '../api/authApi';
 import { useTranslation } from 'react-i18next';
 import { useLanguageFromUrl } from '../hooks/useEffect.js';
+import { useUser } from '../context/UserContext';
 
 
 
@@ -16,8 +17,11 @@ export default function HomeForm() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
- const [searchParams] = useSearchParams(); 
-   useLanguageFromUrl(i18n, searchParams);
+  const [searchParams] = useSearchParams();
+  useLanguageFromUrl(i18n, searchParams);
+  const { user,setUser } = useUser();
+  console.log(user?.username);
+  //Testing Rn
 
   const handleSubmit = async () => {
     if (!username.trim() || !password) return;
@@ -28,6 +32,7 @@ export default function HomeForm() {
       if (isLogin) {
         const res = await login(username, password);
         localStorage.setItem('token', res.data.token);
+        setUser({ username, token: res.data.token });
         navigate('/game');
       } else {
         await register(username, password);
@@ -62,35 +67,35 @@ export default function HomeForm() {
             }}
             className="flex flex-col space-y-6 items-center"
           >
-          {/*I added form just to be able to press enter */}
-        
-          <input
-            type="text"
-            placeholder={t('username')}
-            className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+            {/*I added form just to be able to press enter */}
 
-          <input
-            type="password"
-            placeholder={t('password')}
-            className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-8"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder={t('username')}
+              className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
-          <button
-            type='submit'
-            onClick={handleSubmit}
-            disabled={isLoading}
-            className={`w-72 py-2 text-white rounded-lg transition-colors duration-200 ${isLoading
+            <input
+              type="password"
+              placeholder={t('password')}
+              className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-8"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button
+              type='submit'
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className={`w-72 py-2 text-white rounded-lg transition-colors duration-200 ${isLoading
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700'
-              }`}
-          >
-            {isLoading ? t('loading') : isLogin ? t('login') : t('register')}
-          </button>
+                }`}
+            >
+              {isLoading ? t('loading') : isLogin ? t('login') : t('register')}
+            </button>
           </form>
         </div>
 

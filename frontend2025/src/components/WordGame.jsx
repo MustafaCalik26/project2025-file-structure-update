@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLanguageFromUrl } from '../hooks/useEffect.js';
 import confetti from 'canvas-confetti';
@@ -19,19 +19,29 @@ import {
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { Link } from '@mui/material';
 import { fetchWord, submitGuess, fetchHint } from '../api/gameApi'; //AXIOS IS GONE HERE
+import { useUser } from '../context/UserContext.jsx';
+import { useScore } from '../context/ScoreContext.jsx';
 
 function WordGame() {
-
+  const { user } = useUser();
+  const navigate = useNavigate();
   const [guess, setGuess] = useState('');
   const [result, setResult] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const difficulty = searchParams.get('difficulty') || 'easy';
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
+  const { incrementCorrect, incrementWrong } = useScore();
 
 
 
   useLanguageFromUrl(i18n, searchParams);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/'); //Will Nav to Login page cause even if they dont log in can just acces via URL
+    }
+  }, [user]);
 
 
   // fetch word 
@@ -53,6 +63,9 @@ function WordGame() {
       setResult(data);
 
       if (data.toLowerCase().includes('correct')) {
+        // setCorrectCount(prev => prev + 1);
+        incrementCorrect();
+          console.log("Incrementing correct score");
         confetti({
           particleCount: 100,
           spread: 70,
@@ -61,6 +74,9 @@ function WordGame() {
         queryClient.invalidateQueries(['word']);
         queryClient.removeQueries(['hint']);
         setGuess('');
+      } else {
+        incrementWrong();
+        console.log("Incrementing wrong score");
       }
     },
     onError: () => {
@@ -86,6 +102,19 @@ function WordGame() {
   }, []);
 
   return (
+      <>
+    <Box
+        sx={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          zIndex: 1300, // MUI'nın overlay seviyesine yakın bir değer
+        }}
+      >
+        <Button variant="contained" onClick={() => navigate('/profile')}>
+          Profile
+        </Button>
+      </Box>
     <Container maxWidth="sm" sx={{ mt: 5 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -189,6 +218,7 @@ function WordGame() {
         </Link>
       </Box>
     </Container>
+    </>
   );
 }
 
