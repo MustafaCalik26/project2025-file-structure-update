@@ -12,7 +12,7 @@ import router from './routes/appUse.js';
 
 
 const app = express();
-const PORT = 8080;
+const PORT =  process.env.PORT ||8080;
 
 // const corsOptions = {
 //   origin: 'https://project2025-file-structure-update-5m9pv2k8e.vercel.app',
