@@ -151,4 +151,4 @@ export default function HomeForm() {
     // I am no expert in styling so it does not look great tailwind is a bit complicated
     //Mui is easier to use cause it has it own themes :D manually trying needs a bit creativity in design
   );
-}
+} 
