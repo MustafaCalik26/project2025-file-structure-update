@@ -20,7 +20,6 @@
   "something_went_wrong": "Bir şeyler ters gitti.",
   "user_not_found": "Kullanıcı bulunamadı",
   "invalid_password": "Şifre hatalı",
-  "something_went_wrong": "Bir şeyler ters gitti.",
   "bad_request": "Kullanıcı adı ve şifre gerekli",
   "too_many_attempts": "Çok fazla giriş denemesi. Lütfen bir kaç dakika sonra tekrar deneyin.",
   "server_error": "Sunucu hatası"

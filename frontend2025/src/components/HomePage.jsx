@@ -42,6 +42,7 @@ export default function HomeForm() {
         setIsLogin(true);
       }
     } catch (error) {
+      console.log('Hata cevabı:', error.response?.data);
       const errorCode = error.response?.data?.error_code;
 
       let message;
