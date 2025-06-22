@@ -17,5 +17,10 @@
   "no_account": "Don’t have an account?",
   "have_account": "Already have an account?",
   "registration_successful": "Registration successful. You can now log in.",
-  "something_went_wrong": "Something went wrong."
+  "something_went_wrong": "Something went wrong.",
+  "user_not_found": "User not found",
+  "invalid_password": "Invalid Password",
+  "bad_request": "Username and password required",
+  "too_many_attempts": "Too many login attempts. Please try again in a few minutes.",
+  "server_error": "Server error"
 }

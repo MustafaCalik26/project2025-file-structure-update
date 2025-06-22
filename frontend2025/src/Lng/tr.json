@@ -17,5 +17,11 @@
   "no_account": "Hesabın yok mu?",
   "have_account": "Zaten hesabın var mı?",
   "registration_successful": "Kayıt başarılı. Artık giriş yapabilirsin.",
-  "something_went_wrong": "Bir şeyler ters gitti."
+  "something_went_wrong": "Bir şeyler ters gitti.",
+  "user_not_found": "Kullanıcı bulunamadı",
+  "invalid_password": "Şifre hatalı",
+  "something_went_wrong": "Bir şeyler ters gitti.",
+  "bad_request": "Kullanıcı adı ve şifre gerekli",
+  "too_many_attempts": "Çok fazla giriş denemesi. Lütfen bir kaç dakika sonra tekrar deneyin.",
+  "server_error": "Sunucu hatası"
 }

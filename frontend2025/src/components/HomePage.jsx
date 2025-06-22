@@ -42,7 +42,30 @@ export default function HomeForm() {
         setIsLogin(true);
       }
     } catch (error) {
-      toast.error(error.response?.data?.error || t('something_went_wrong'))
+      const errorCode = error.response?.data?.error_code;
+
+      let message;
+      switch (errorCode) {
+        case 'USER_NOT_FOUND':
+          message = t('user_not_found');
+          break;
+        case 'INVALID_PASSWORD':
+          message = t('invalid_password');
+          break;
+        case 'BAD_REQUEST':
+          message = t('bad_request');
+          break;
+        case 'TOO_MANY_ATTEMPTS':
+          message = t('too_many_attempts');
+          break;
+        case 'SERVER_ERROR':
+          message = t('server_error');
+          break;
+        default:
+          message = error.response?.data?.error || t('something_went_wrong');
+      }
+
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +136,7 @@ export default function HomeForm() {
       </div>
       <ToastContainer
         key={i18n.language}
-        position="top-center"
+        position="top-left"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
