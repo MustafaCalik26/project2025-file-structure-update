@@ -112,6 +112,7 @@ export default function HomeForm() {
         </p>
       </div>
       <ToastContainer
+        key={i18n.language}
         position="top-center"
         autoClose={3000}
         hideProgressBar={false}

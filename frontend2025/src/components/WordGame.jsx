@@ -44,6 +44,15 @@ function WordGame() {
   }, [user]);
 
 
+  //can click on button and press enter either
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (guess.trim() === '') return;
+    guessMutation.mutate(guess);
+  };
+
+
+
   // fetch word 
   const {
     data: scrambled,
@@ -65,7 +74,7 @@ function WordGame() {
       if (data.toLowerCase().includes('correct')) {
         // setCorrectCount(prev => prev + 1);
         incrementCorrect();
-          console.log("Incrementing correct score");
+        console.log("Incrementing correct score");
         confetti({
           particleCount: 100,
           spread: 70,
@@ -102,8 +111,8 @@ function WordGame() {
   }, []);
 
   return (
-      <>
-    <Box
+    <>
+      <Box
         sx={{
           position: 'fixed',
           top: 16,
@@ -115,109 +124,111 @@ function WordGame() {
           Profile
         </Button>
       </Box>
-    <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-          <Button onClick={() => i18n.changeLanguage('en')}>EN</Button>
-          <Button onClick={() => i18n.changeLanguage('tr')}>TR</Button>
-        </Box>
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button variant="contained" color="success" onClick={() => setSearchParams({ difficulty: 'easy' })}>
-            {t('easy')}
-          </Button>
-          <Button variant="contained" color="warning" onClick={() => setSearchParams({ difficulty: 'normal' })}>
-            {t('normal')}
-          </Button>
-          <Button variant="contained" color="error" onClick={() => setSearchParams({ difficulty: 'hard' })}>
-            {t('hard')}
-          </Button>
-        </Stack>
-        <Typography variant="h4" sx={{ color: '#333', fontSize: 45, borderBottom: '2px solid black', pb: 2 }} gutterBottom>
-          {t('title')}
-        </Typography>
+      <Container maxWidth="sm" sx={{ mt: 5 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+            <Button onClick={() => i18n.changeLanguage('en')}>EN</Button>
+            <Button onClick={() => i18n.changeLanguage('tr')}>TR</Button>
+          </Box>
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <Button variant="contained" color="success" onClick={() => setSearchParams({ difficulty: 'easy' })}>
+              {t('easy')}
+            </Button>
+            <Button variant="contained" color="warning" onClick={() => setSearchParams({ difficulty: 'normal' })}>
+              {t('normal')}
+            </Button>
+            <Button variant="contained" color="error" onClick={() => setSearchParams({ difficulty: 'hard' })}>
+              {t('hard')}
+            </Button>
+          </Stack>
+          <Typography variant="h4" sx={{ color: '#333', fontSize: 45, borderBottom: '2px solid black', pb: 2 }} gutterBottom>
+            {t('title')}
+          </Typography>
 
-        <Typography variant="h6" gutterBottom>
-          {t('scrambled')}
-        </Typography>
+          <Typography variant="h6" gutterBottom>
+            {t('scrambled')}
+          </Typography>
 
-        <Box sx={{
-          fontSize: '1.8rem',
-          fontWeight: 'bold',
-          bgcolor: '#fff',
-          p: 2,
-          mb: 2,
-          borderRadius: 2,
-          boxShadow: 1,
-          width: 'fit-content',
-          mx: 'auto',
-        }}>
-          {isLoading ? <CircularProgress size={24} /> : isError ? t('error_loading_word') : scrambled}
-        </Box>
+          <Box sx={{
+            fontSize: '1.8rem',
+            fontWeight: 'bold',
+            bgcolor: '#fff',
+            p: 2,
+            mb: 2,
+            borderRadius: 2,
+            boxShadow: 1,
+            width: 'fit-content',
+            mx: 'auto',
+          }}>
+            {isLoading ? <CircularProgress size={24} /> : isError ? t('error_loading_word') : scrambled}
+          </Box>
+          <form onSubmit={handleSubmit}>
+            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+              <TextField
+                label={t('guess_here')}
+                value={guess}
+                onChange={(e) => setGuess(e.target.value)}
+                sx={{ flexGrow: 1 }}
+              />
+              <Button
+                type='submit'
+                variant="contained"
+                color="primary"
+                sx={{
+                  px: 3,
+                  '&:hover': { transform: 'translateY(-2px)' },
+                }}
+                disabled={guessMutation.isLoading}
+              >
+                {t('guess')}
+              </Button>
+            </Box>
+          </form>
 
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-          <TextField
-            label={t('guess_here')}
-            value={guess}
-            onChange={(e) => setGuess(e.target.value)}
-            sx={{ flexGrow: 1 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => guessMutation.mutate(guess)}
-            sx={{
-              px: 3,
-              '&:hover': { transform: 'translateY(-2px)' },
-            }}
-          >
-            {t('guess')}
-          </Button>
-        </Box>
+          <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
+            <Button variant="contained" onClick={() => fetchNewWord()}>
+              {t('new_word')}
+            </Button>
+            <Button variant="contained" onClick={() => fetchHintQuery()}>
+              {t('get_hint')}
+            </Button>
+          </Stack>
 
-        <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
-          <Button variant="contained" onClick={() => fetchNewWord()}>
-            {t('new_word')}
-          </Button>
-          <Button variant="contained" onClick={() => fetchHintQuery()}>
-            {t('get_hint')}
-          </Button>
-        </Stack>
+          {result && (
+            <Alert severity={result.toLowerCase().includes('correct') ? 'success' : 'info'}>
+              {result}
+            </Alert>
+          )}
 
-        {result && (
-          <Alert severity={result.toLowerCase().includes('correct') ? 'success' : 'info'}>
-            {result}
-          </Alert>
-        )}
-
-        {hintLoading ? (
-          <Typography variant="body2" sx={{ mt: 2 }}>{t('loading_hint')}</Typography>
-        ) : hintError ? (
-          <Alert severity="error" sx={{ mt: 2 }}>{t('error_fetching_hint')}</Alert>
-        ) : (
-          hint && <Typography variant="body2" sx={{ mt: 2 }}>{hint}</Typography>
-        )}
-      </Paper>
-      <Box
-        component="footer"
-        sx={{
-          mt: 4,
-          pt: 2,
-          textAlign: 'center',
-        }}
-      >
-        <Typography variant="body1" sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
-          Author: Mustafa Calik
-        </Typography>
-        <Link
-          href="https://instagram.com/x.calik"
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ color: '#E1306C', fontSize: 30 }}
+          {hintLoading ? (
+            <Typography variant="body2" sx={{ mt: 2 }}>{t('loading_hint')}</Typography>
+          ) : hintError ? (
+            <Alert severity="error" sx={{ mt: 2 }}>{t('error_fetching_hint')}</Alert>
+          ) : (
+            hint && <Typography variant="body2" sx={{ mt: 2 }}>{hint}</Typography>
+          )}
+        </Paper>
+        <Box
+          component="footer"
+          sx={{
+            mt: 4,
+            pt: 2,
+            textAlign: 'center',
+          }}
         >
-          <InstagramIcon />
-        </Link>
-      </Box>
-    </Container>
+          <Typography variant="body1" sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
+            Author: Mustafa Calik
+          </Typography>
+          <Link
+            href="https://instagram.com/x.calik"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: '#E1306C', fontSize: 30 }}
+          >
+            <InstagramIcon />
+          </Link>
+        </Box>
+      </Container>
     </>
   );
 }
