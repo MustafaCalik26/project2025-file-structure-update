@@ -4,6 +4,8 @@ import { login, register } from '../api/authApi';
 import { useTranslation } from 'react-i18next';
 import { useLanguageFromUrl } from '../hooks/useEffect.js';
 import { useUser } from '../context/UserContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -19,7 +21,7 @@ export default function HomeForm() {
   const { t, i18n } = useTranslation();
   const [searchParams] = useSearchParams();
   useLanguageFromUrl(i18n, searchParams);
-  const { user,setUser } = useUser();
+  const { user, setUser } = useUser();
   console.log(user?.username);
   //Testing Rn
 
@@ -36,11 +38,11 @@ export default function HomeForm() {
         navigate('/game');
       } else {
         await register(username, password);
-        alert(t('registration_successful'));
+        toast.success(t('registration_successful'));
         setIsLogin(true);
       }
     } catch (error) {
-      alert(error.response?.data?.error || t('something_went_wrong'));
+      toast.error(error.response?.data?.error || t('something_went_wrong'))
     } finally {
       setIsLoading(false);
     }
@@ -109,6 +111,17 @@ export default function HomeForm() {
           </a>
         </p>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
     // I am no expert in styling so it does not look great tailwind is a bit complicated
     //Mui is easier to use cause it has it own themes :D manually trying needs a bit creativity in design

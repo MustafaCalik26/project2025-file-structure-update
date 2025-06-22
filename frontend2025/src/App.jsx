@@ -7,6 +7,7 @@ import { UserProvider } from './context/UserContext';
 import Profile from './pages/Profile';
 import { ScoreProvider } from './context/ScoreContext'
 
+
 const queryClient = new QueryClient();
 
 function App() {
