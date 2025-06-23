@@ -54,9 +54,9 @@ const isCorrect = guess === currentPuzzle.toLowerCase();
 
 
     if (isCorrect){
-    res.send("Correct Answer 🎉");
+   res.json({ status: 'correct' });
   } else {
-    res.send(`False. Try Again Or Use Hint`);
+    res.json({ status: 'wrong' });
   }
 });
 

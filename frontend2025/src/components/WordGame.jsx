@@ -3,7 +3,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLanguageFromUrl } from '../hooks/useEffect.js';
 import confetti from 'canvas-confetti';
-import '../styles/game.css';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Container,
@@ -15,10 +14,10 @@ import {
   Alert,
   Stack,
   Paper,
+  Link,
 } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { Link } from '@mui/material';
-import { fetchWord, submitGuess, fetchHint } from '../api/gameApi'; //AXIOS IS GONE HERE
+import { fetchWord, submitGuess, fetchHint } from '../api/gameApi';
 import { useUser } from '../context/UserContext.jsx';
 import { useScore } from '../context/ScoreContext.jsx';
 
@@ -33,27 +32,20 @@ function WordGame() {
   const queryClient = useQueryClient();
   const { incrementCorrect, incrementWrong } = useScore();
 
-
-
   useLanguageFromUrl(i18n, searchParams);
 
   useEffect(() => {
     if (!user) {
-      navigate('/'); //Will Nav to Login page cause even if they dont log in can just acces via URL
+      navigate('/');
     }
   }, [user]);
 
-
-  //can click on button and press enter either
   const handleSubmit = (e) => {
     e.preventDefault();
     if (guess.trim() === '') return;
-    guessMutation.mutate(guess);
+    guessMutation.mutate(guess.trim());
   };
 
-
-
-  // fetch word 
   const {
     data: scrambled,
     isLoading,
@@ -61,39 +53,30 @@ function WordGame() {
     refetch: fetchNewWord,
   } = useQuery({
     queryKey: ['word', difficulty],
-    // queryFn: fetchWord,
-    queryFn: () => fetchWord(difficulty),//need arrow func cause were now giving a param
-
+    queryFn: () => fetchWord(difficulty),
   });
 
   const guessMutation = useMutation({
     mutationFn: submitGuess,
     onSuccess: (data) => {
       setResult(data);
-
       if (data.toLowerCase().includes('correct')) {
-        // setCorrectCount(prev => prev + 1);
+        setResult(t('guess_correct'));
         incrementCorrect();
-        console.log("Incrementing correct score");
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-        });
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         queryClient.invalidateQueries(['word']);
         queryClient.removeQueries(['hint']);
         setGuess('');
       } else {
+        setResult(t('guess_wrong'));
         incrementWrong();
-        console.log("Incrementing wrong score");
       }
     },
     onError: () => {
-      setResult('Error submitting guess');
-    }
+      setResult(t('something_went_wrong'));
+    },
   });
 
-  // get hint
   const {
     data: hint,
     refetch: fetchHintQuery,
@@ -105,129 +88,252 @@ function WordGame() {
     enabled: false,
   });
 
-  // give word when page opens so user does not have to do manually
   useEffect(() => {
     fetchNewWord();
   }, []);
 
   return (
     <>
+      {/* Profil butonu sağ üstte sabit */}
       <Box
         sx={{
           position: 'fixed',
           top: 16,
           right: 16,
-          zIndex: 1300, // MUI'nın overlay seviyesine yakın bir değer
+          zIndex: 1300,
         }}
       >
-        <Button variant="contained" onClick={() => navigate('/profile')}>
-          Profile
+        <Button
+          variant="outlined"
+          color="inherit"
+          onClick={() => navigate('/profile')}
+          sx={{ borderColor: 'white', color: 'white' }}
+        >
+          {t('profile')}
         </Button>
       </Box>
-      <Container maxWidth="sm" sx={{ mt: 5 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-            <Button onClick={() => i18n.changeLanguage('en')}>EN</Button>
-            <Button onClick={() => i18n.changeLanguage('tr')}>TR</Button>
+
+      <Container
+        maxWidth="sm"
+        sx={{
+          mt: 6,
+          mb: 6,
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          px: 2,
+        }}
+      >
+        <Paper
+          elevation={8}
+          sx={{
+            bgcolor: '#1f2937',
+            color: 'white',
+            borderRadius: 3,
+            p: { xs: 2, sm: 4 },
+            boxShadow: '0 4px 20px rgba(0,0,0,0.7)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            minHeight: '60vh',
+            position: 'relative',
+          }}
+        >
+          {/* my new ai generated logo */}
+          <Box sx={{ mb: 3 }}>
+            <img
+              src="../background_Homepage/logo.png"
+              alt="logo"
+              style={{ width: 70, height: 'auto' }}
+            />
           </Box>
-          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <Button variant="contained" color="success" onClick={() => setSearchParams({ difficulty: 'easy' })}>
+
+          {/* en,tr language */}
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            spacing={1}
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+            }}
+          >
+            <Button size="small" onClick={() => i18n.changeLanguage('en')} sx={{ color: 'white' }}>
+              EN
+            </Button>
+            <Button size="small" onClick={() => i18n.changeLanguage('tr')} sx={{ color: 'white' }}>
+              TR
+            </Button>
+          </Stack>
+
+          {/* not working diffic buttons */}
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+            sx={{ mb: 3, width: '100%' }}
+          >
+            <Button
+              variant={difficulty === 'easy' ? 'contained' : 'outlined'}
+              color="success"
+              onClick={() => setSearchParams({ difficulty: 'easy' })}
+            >
               {t('easy')}
             </Button>
-            <Button variant="contained" color="warning" onClick={() => setSearchParams({ difficulty: 'normal' })}>
+            <Button
+              variant={difficulty === 'normal' ? 'contained' : 'outlined'}
+              color="warning"
+              onClick={() => setSearchParams({ difficulty: 'normal' })}
+            >
               {t('normal')}
             </Button>
-            <Button variant="contained" color="error" onClick={() => setSearchParams({ difficulty: 'hard' })}>
+            <Button
+              variant={difficulty === 'hard' ? 'contained' : 'outlined'}
+              color="error"
+              onClick={() => setSearchParams({ difficulty: 'hard' })}
+            >
               {t('hard')}
             </Button>
           </Stack>
-          <Typography variant="h4" sx={{ color: '#333', fontSize: 45, borderBottom: '2px solid black', pb: 2 }} gutterBottom>
+
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: '700',
+              borderBottom: '3px solid #3b82f6',
+              pb: 2,
+              mb: 3,
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
             {t('title')}
           </Typography>
 
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600, color: 'white' }}>
             {t('scrambled')}
           </Typography>
 
-          <Box sx={{
-            fontSize: '1.8rem',
-            fontWeight: 'bold',
-            bgcolor: '#fff',
-            p: 2,
-            mb: 2,
-            borderRadius: 2,
-            boxShadow: 1,
-            width: 'fit-content',
-            mx: 'auto',
-          }}>
-            {isLoading ? <CircularProgress size={24} /> : isError ? t('error_loading_word') : scrambled}
+          <Box
+            sx={{
+              fontSize: '2rem',
+              fontWeight: '700',
+              bgcolor: '#374151',
+              p: 3,
+              mb: 3,
+              borderRadius: 3,
+              boxShadow: '0 3px 10px rgba(0,0,0,0.5)',
+              textAlign: 'center',
+              minHeight: 70,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              wordBreak: 'break-word',
+            }}
+          >
+            {isLoading ? (
+              <CircularProgress size={30} color="inherit" />
+            ) : isError ? (
+              t('error_loading_word')
+            ) : (
+              scrambled
+            )}
           </Box>
-          <form onSubmit={handleSubmit}>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ xs: 1, sm: 2 }}
+              sx={{ mb: 3 }}
+            >
               <TextField
+                fullWidth
+                size="small"
                 label={t('guess_here')}
+                variant="filled"
                 value={guess}
                 onChange={(e) => setGuess(e.target.value)}
-                sx={{ flexGrow: 1 }}
+                autoComplete="off"
+                InputLabelProps={{ style: { color: 'rgba(255 255 255 / 0.8)' } }}
+                sx={{
+                  bgcolor: '#374151',
+                  borderRadius: 1,
+                  input: { color: 'white' },
+                }}
               />
               <Button
-                type='submit'
+                type="submit"
                 variant="contained"
                 color="primary"
-                sx={{
-                  px: 3,
-                  '&:hover': { transform: 'translateY(-2px)' },
-                }}
+                sx={{ minWidth: 120 }}
                 disabled={guessMutation.isLoading}
               >
                 {t('guess')}
               </Button>
-            </Box>
+            </Stack>
           </form>
-
-          <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
-            <Button variant="contained" onClick={() => fetchNewWord()}>
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+            sx={{ mb: 3, width: '100%' }}
+          >
+            <Button variant="outlined" color="inherit" onClick={() => fetchNewWord()}>
               {t('new_word')}
             </Button>
-            <Button variant="contained" onClick={() => fetchHintQuery()}>
+            <Button variant="outlined" color="inherit" onClick={() => fetchHintQuery()}>
               {t('get_hint')}
             </Button>
           </Stack>
-
           {result && (
-            <Alert severity={result.toLowerCase().includes('correct') ? 'success' : 'info'}>
+            <Alert
+              severity={result.toLowerCase().includes('correct') ? 'success' : 'info'}
+              sx={{ color: 'black', width: '100%' }}
+            >
               {result}
             </Alert>
           )}
-
           {hintLoading ? (
-            <Typography variant="body2" sx={{ mt: 2 }}>{t('loading_hint')}</Typography>
+            <Typography variant="body2" sx={{ mt: 2, textAlign: 'center', color: 'white' }}>
+              {t('loading_hint')}
+            </Typography>
           ) : hintError ? (
-            <Alert severity="error" sx={{ mt: 2 }}>{t('error_fetching_hint')}</Alert>
+            <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
+              {t('error_fetching_hint')}
+            </Alert>
           ) : (
-            hint && <Typography variant="body2" sx={{ mt: 2 }}>{hint}</Typography>
+            hint && (
+              <Typography
+                variant="body2"
+                sx={{ mt: 2, fontStyle: 'italic', textAlign: 'center', color: 'white' }}
+              >
+                {hint}
+              </Typography>
+            )
           )}
-        </Paper>
-        <Box
-          component="footer"
-          sx={{
-            mt: 4,
-            pt: 2,
-            textAlign: 'center',
-          }}
-        >
-          <Typography variant="body1" sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
-            Author: Mustafa Calik
-          </Typography>
-          <Link
-            href="https://instagram.com/x.calik"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: '#E1306C', fontSize: 30 }}
+
+          {/* Footer and insta */}
+          <Box
+            component="footer"
+            sx={{
+              mt: 5,
+              textAlign: 'center',
+              color: 'rgba(255, 255, 255, 0.6)',
+            }}
           >
-            <InstagramIcon />
-          </Link>
-        </Box>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              Author: Mustafa Calik
+            </Typography>
+            <Link
+              href="https://instagram.com/x.calik"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ color: '#E1306C', fontSize: 30 }}
+            >
+              <InstagramIcon />
+            </Link>
+          </Box>
+        </Paper>
       </Container>
     </>
   );

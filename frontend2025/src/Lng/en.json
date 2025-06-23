@@ -22,5 +22,15 @@
   "invalid_password": "Invalid Password",
   "bad_request": "Username and password required",
   "too_many_attempts": "Too many login attempts. Please try again in a few minutes.",
-  "server_error": "Server error"
+  "server_error": "Server error",
+  "guess_correct": "Correct! Well done.",
+  "guess_wrong": "Incorrect, try again or use hint.",
+  "profile_page_title": "Profile Page",
+  "welcome": "Welcome",
+  "correct_count": "Correct Count",
+  "wrong_count": "Wrong Count",
+  "profile": "Profile",
+   "easy": "Easy",
+  "normal": "Normal",
+  "hard": "Hard"
 }

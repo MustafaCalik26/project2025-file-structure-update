@@ -22,5 +22,15 @@
   "invalid_password": "Şifre hatalı",
   "bad_request": "Kullanıcı adı ve şifre gerekli",
   "too_many_attempts": "Çok fazla giriş denemesi. Lütfen bir kaç dakika sonra tekrar deneyin.",
-  "server_error": "Sunucu hatası"
+  "server_error": "Sunucu hatası",
+    "guess_correct": "Doğru! Aferin.",
+  "guess_wrong": "Yanlış, tekrar dene ya da ipucu al.",
+   "profile_page_title": "Profil Sayfası",
+  "welcome": "Hoşgeldin",
+  "correct_count": "Doğru Sayısı",
+  "wrong_count": "Yanlış Sayısı",
+  "profile": "Profil",
+  "easy": "Kolay",
+  "normal": "Normal",
+  "hard": "Zor"
 }
