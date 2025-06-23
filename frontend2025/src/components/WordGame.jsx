@@ -20,6 +20,8 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { fetchWord, submitGuess, fetchHint } from '../api/gameApi';
 import { useUser } from '../context/UserContext.jsx';
 import { useScore } from '../context/ScoreContext.jsx';
+import logo from '../background_Homepage/logo.png';
+
 
 function WordGame() {
   const { user } = useUser();
@@ -140,7 +142,7 @@ function WordGame() {
           {/* my new ai generated logo */}
           <Box sx={{ mb: 3 }}>
             <img
-              src="../background_Homepage/logo.png"
+              src={logo}
               alt="logo"
               style={{ width: 70, height: 'auto' }}
             />

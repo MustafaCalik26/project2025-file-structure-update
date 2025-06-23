@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaFingerprint } from 'react-icons/fa';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdAlternateEmail } from 'react-icons/md';
+import logo from '../background_Homepage/logo.png';
 
 
 
@@ -79,7 +80,7 @@ export default function HomeForm() {
   return (
     <div className="w-full h-screen flex items-center justify-center text-white">
       <div className="w-[90%] max-w-sm md:max-w-md p-5 bg-gray-900 flex-col flex items-center gap-4 rounded-xl shadow-slate-400 shadow-lg">
-        <img src="../background_Homepage/logo.png" alt="logo" className="w-12 md:w-14" />
+        <img src={logo} alt="logo" className="w-12 md:w-14" />   
         <h1 className="text-lg md:text-xl font-semibold">
           {isLogin ? t('login') : t('register')}
         </h1>

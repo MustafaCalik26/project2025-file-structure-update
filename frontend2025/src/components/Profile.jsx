@@ -1,6 +1,8 @@
 import { useUser } from '../context/UserContext';
 import { useScore } from '../context/ScoreContext';
 import { useTranslation } from 'react-i18next';
+import logo from '../background_Homepage/logo.png';
+
 
 export default function Profile() {
   const { t, i18n } = useTranslation();
@@ -28,7 +30,7 @@ export default function Profile() {
 
         <div className="mb-6 flex justify-center">
           <img
-            src="/background_Homepage/logo.png"
+            src={logo}
             alt="Logo"
             className="w-16 h-auto"
           />

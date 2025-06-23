@@ -4,6 +4,6 @@ but even if its stays empty it works?*/
 /* Directives even if index css is empty */
 body{
  @apply bg-no-repeat bg-cover bg-center min-h-screen;
-    background-image: url(../background_Homepage/ChatGPT\ Image\ 23\ Haz\ 2025\ 16_48_53.png);
+    background-image: url(../src/background_Homepage/ChatGPT\ Image\ 23\ Haz\ 2025\ 16_48_53.png);
     color: #fff;
 }
