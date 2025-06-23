@@ -139,8 +139,8 @@ export default function HomeForm() {
         </form>
 
         <div className="w-full flex justify-center mt-3 gap-4">
-          <button onClick={() => i18n.changeLanguage('en')} className="text-xs underline">EN</button>
-          <button onClick={() => i18n.changeLanguage('tr')} className="text-xs underline">TR</button>
+          <button onClick={() => i18n.changeLanguage('en')} className="text-xs underline cursor-pointer">EN</button>
+          <button onClick={() => i18n.changeLanguage('tr')} className="text-xs underline cursor-pointer">TR</button>
         </div>
       </div>
 

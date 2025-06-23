@@ -94,7 +94,6 @@ function WordGame() {
 
   return (
     <>
-      {/* Profil butonu sağ üstte sabit */}
       <Box
         sx={{
           position: 'fixed',
