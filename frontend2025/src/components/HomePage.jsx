@@ -6,6 +6,9 @@ import { useLanguageFromUrl } from '../hooks/useEffect.js';
 import { useUser } from '../context/UserContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaFingerprint } from 'react-icons/fa';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { MdAlternateEmail } from 'react-icons/md';
 
 
 
@@ -17,6 +20,7 @@ export default function HomeForm() {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [searchParams] = useSearchParams();
@@ -73,82 +77,86 @@ export default function HomeForm() {
   };
 
   return (
-    <div className="flex justify-center mt-20">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 space-y-6 border border-gray-200 flex flex-col items-center">
-
-        <div className="flex justify-end w-full mb-4">
-          <button className="text-sm mr-2" onClick={() => i18n.changeLanguage('en')}>EN</button>
-          <button className="text-sm" onClick={() => i18n.changeLanguage('tr')}>TR</button>
-        </div>
-
-        <h2 className="text-2xl font-bold text-center text-gray-800">
+    <div className="w-full h-screen flex items-center justify-center text-white">
+      <div className="w-[90%] max-w-sm md:max-w-md p-5 bg-gray-900 flex-col flex items-center gap-4 rounded-xl shadow-slate-400 shadow-lg">
+        <img src="../background_Homepage/logo.png" alt="logo" className="w-12 md:w-14" />
+        <h1 className="text-lg md:text-xl font-semibold">
           {isLogin ? t('login') : t('register')}
-        </h2>
-        <div className="flex flex-col space-y-6 items-center">
-          {/* Dont Know why but cant add space between button and inputs  */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault(); // Prevent page refresh
-              handleSubmit();
-            }}
-            className="flex flex-col space-y-6 items-center"
+        </h1>
+        <p className="text-xs md:text-sm text-gray-500 text-center">
+          {isLogin ? t('no_account') : t('have_account')}{' '}
+          <span
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-white underline cursor-pointer"
           >
-            {/*I added form just to be able to press enter */}
+            {isLogin ? t('register') : t('login')}
+          </span>
+        </p>
 
+        <form className="w-full flex flex-col gap-3" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+          <div className="w-full flex items-center gap-2 bg-gray-800 p-2 rounded-xl">
+            <MdAlternateEmail />
             <input
               type="text"
               placeholder={t('username')}
-              className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-transparent border-0 w-full outline-none text-sm md:text-base"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
+          </div>
 
+          <div className="w-full flex items-center gap-2 bg-gray-800 p-2 rounded-xl relative">
+            <FaFingerprint />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder={t('password')}
-              className="w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-8"
+              className="bg-transparent border-0 w-full outline-none text-sm md:text-base"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {showPassword ? (
+              <FaRegEyeSlash
+                className="absolute right-5 cursor-pointer"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <FaRegEye
+                className="absolute right-5 cursor-pointer"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
+          </div>
 
-            <button
-              type='submit'
-              onClick={handleSubmit}
-              disabled={isLoading}
-              className={`w-72 py-2 text-white rounded-lg transition-colors duration-200 ${isLoading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
-                }`}
-            >
-              {isLoading ? t('loading') : isLogin ? t('login') : t('register')}
-            </button>
-          </form>
-        </div>
-
-        <p className="text-center text-sm text-gray-600">
-          {isLogin ? t('no_account') : t('have_account')}{' '}
-          <a
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-600 hover:underline font-medium"
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full p-2 rounded-xl mt-3 text-sm md:text-base ${
+              isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+            }`}
           >
-            {isLogin ? t('register') : t('login')}
-          </a>
-        </p>
+            {isLoading ? t('loading') : isLogin ? t('login') : t('register')}
+          </button>
+        </form>
+
+        <div className="w-full flex justify-center mt-3 gap-4">
+          <button onClick={() => i18n.changeLanguage('en')} className="text-xs underline">EN</button>
+          <button onClick={() => i18n.changeLanguage('tr')} className="text-xs underline">TR</button>
+        </div>
       </div>
+
       <ToastContainer
         key={i18n.language}
         position="top-left"
         autoClose={3000}
         hideProgressBar={false}
-        newestOnTop={false}
         closeOnClick
-        pauseOnFocusLoss
-        draggable
         pauseOnHover
-        theme="light"
+        draggable
+        theme="dark"
       />
     </div>
+  
+
     // I am no expert in styling so it does not look great tailwind is a bit complicated
-    //Mui is easier to use cause it has it own themes :D manually trying needs a bit creativity in design
   );
 } 
