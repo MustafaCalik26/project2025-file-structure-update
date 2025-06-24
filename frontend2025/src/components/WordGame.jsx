@@ -56,6 +56,7 @@ function WordGame() {
   } = useQuery({
     queryKey: ['word', difficulty],
     queryFn: () => fetchWord(difficulty),
+    staleTime: 10000,
   });
 
   const guessMutation = useMutation({
@@ -90,9 +91,9 @@ function WordGame() {
     enabled: false,
   });
 
-  useEffect(() => {
-    fetchNewWord();
-  }, []);
+  // useEffect(() => {
+  //   fetchNewWord();
+  // }, [difficulty]);
 
   return (
     <>
