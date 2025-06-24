@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaFingerprint } from 'react-icons/fa';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdAlternateEmail } from 'react-icons/md';
+import { useEffect } from 'react';
 
 
 
@@ -28,6 +29,9 @@ export default function HomeForm() {
   const { user, setUser } = useUser();
   console.log(user?.username);
   //Testing Rn
+  const [rememberMe, setRememberMe] = useState(false);
+  //Its hard to repeat loging in every time i wanna test something
+  //users will also benefit
 
   const handleSubmit = async () => {
     if (!username.trim() || !password) return;
@@ -36,8 +40,11 @@ export default function HomeForm() {
 
     try {
       if (isLogin) {
-        const res = await login(username, password);
-        localStorage.setItem('token', res.data.token);
+        const res = await login(username, password); if (rememberMe) {
+          localStorage.setItem('token', res.data.token);
+        }else{
+          sessionStorage.setItem('token', res.data.token);
+        }
         setUser({ username, token: res.data.token });
         navigate('/game');
       } else {
@@ -75,6 +82,14 @@ export default function HomeForm() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  if (token) {
+    setUser({ username: '', token });
+    navigate('/game');
+  }
+}, []);
 
   return (
     <div className="w-full h-screen flex items-center justify-center text-white">
@@ -126,13 +141,24 @@ export default function HomeForm() {
               />
             )}
           </div>
+          <div className="flex items-center gap-2 mt-2">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
+              className="cursor-pointer"
+            />
+            <label htmlFor="rememberMe" className="text-sm cursor-pointer">
+              {t('remember_me')}
+            </label>
+          </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full p-2 rounded-xl mt-3 text-sm md:text-base ${
-              isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-            }`}
+            className={`w-full p-2 rounded-xl mt-3 text-sm md:text-base ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+              }`}
           >
             {isLoading ? t('loading') : isLogin ? t('login') : t('register')}
           </button>
@@ -155,7 +181,7 @@ export default function HomeForm() {
         theme="dark"
       />
     </div>
-  
+
 
     // I am no expert in styling so it does not look great tailwind is a bit complicated
   );
