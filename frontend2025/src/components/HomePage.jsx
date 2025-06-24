@@ -28,10 +28,9 @@ export default function HomeForm() {
   useLanguageFromUrl(i18n, searchParams);
   const { user, setUser } = useUser();
   console.log(user?.username);
+  
   //Testing Rn
-  const [rememberMe, setRememberMe] = useState(false);
-  //Its hard to repeat loging in every time i wanna test something
-  //users will also benefit
+
 
   const handleSubmit = async () => {
     if (!username.trim() || !password) return;
@@ -40,12 +39,9 @@ export default function HomeForm() {
 
     try {
       if (isLogin) {
-        const res = await login(username, password); if (rememberMe) {
-          localStorage.setItem('token', res.data.token);
-        }else{
-          sessionStorage.setItem('token', res.data.token);
-        }
+        const res = await login(username, password);        
         setUser({ username, token: res.data.token });
+        localStorage.setItem('token', res.data.token);
         navigate('/game');
       } else {
         await register(username, password);
@@ -83,13 +79,7 @@ export default function HomeForm() {
     }
   };
 
-  useEffect(() => {
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-  if (token) {
-    setUser({ username: '', token });
-    navigate('/game');
-  }
-}, []);
+  
 
   return (
     <div className="w-full h-screen flex items-center justify-center text-white">
@@ -141,19 +131,7 @@ export default function HomeForm() {
               />
             )}
           </div>
-          <div className="flex items-center gap-2 mt-2">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
-              className="cursor-pointer"
-            />
-            <label htmlFor="rememberMe" className="text-sm cursor-pointer">
-              {t('remember_me')}
-            </label>
-          </div>
-
+           
           <button
             type="submit"
             disabled={isLoading}

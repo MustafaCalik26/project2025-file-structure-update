@@ -16,6 +16,7 @@ router.post('/', async (req, res) => {
 
   const username = req.body.username?.trim();
   const password = req.body.password?.trim();
+  
 
   if (!username || !password) {
     return res.status(400).json({ error_code: 'BAD_REQUEST', error: 'Username and password required' });
