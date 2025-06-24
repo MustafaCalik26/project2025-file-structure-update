@@ -32,5 +32,6 @@
   "profile": "Profile",
    "easy": "Easy",
   "normal": "Normal",
-  "hard": "Hard"
+  "hard": "Hard",
+  "remember_me":"Remember Me"
 }
