@@ -121,16 +121,10 @@ function WordGame() {
       <Container
         maxWidth="sm"
         sx={{
-          mt: 2,
-          mb: 2,
-          // maxHeight: '90vh',
-          // overflowY: 'auto',
-          px: 2,
-          py: 4,
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          mt: 6,
+          mb: 6,
+          maxHeight: '90vh',
+          overflowY: 'auto',
           px: 2,
         }}
       >
@@ -138,8 +132,6 @@ function WordGame() {
           elevation={8}
           className={isShaking ? 'shake' : ''}
           sx={{
-            width: '100%',
-            maxWidth: 800,
             bgcolor: '#1f2937',
             color: 'white',
             borderRadius: 3,
@@ -148,10 +140,8 @@ function WordGame() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            // minHeight: '60vh',
+            minHeight: '60vh',
             position: 'relative',
-            maxHeight: '95vh',
-            overflowY: 'auto',
           }}
         >
           {/* my new ai generated logo */}
@@ -216,7 +206,6 @@ function WordGame() {
             variant="h4"
             sx={{
               fontWeight: '700',
-              fontSize: { xs: '1.5rem', sm: '2rem' },
               borderBottom: '3px solid #3b82f6',
               pb: 2,
               mb: 3,
@@ -351,9 +340,9 @@ function WordGame() {
             </Link>
           </Box>
         </Paper>
-      </Container >
+      </Container>
     </>
   );
 }
 
-export default WordGame;
+export default WordGame; 
