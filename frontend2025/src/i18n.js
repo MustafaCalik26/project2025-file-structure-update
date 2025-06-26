@@ -9,8 +9,8 @@ i18n
       en: { translation: En },
       tr: { translation: Tr },
     },
-    lng: 'en', // Defo Lang
-    fallbackLng: 'tr',
+    lng: 'tr', // Defo Lang
+    fallbackLng: 'en',
 
     interpolation: {
       escapeValue: false, 

@@ -33,6 +33,7 @@ function WordGame() {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const { incrementCorrect, incrementWrong } = useScore();
+  const [isShaking, setIsShaking] = useState(false);
 
   useLanguageFromUrl(i18n, searchParams);
 
@@ -73,6 +74,8 @@ function WordGame() {
       } else {
         setResult(t('guess_wrong'));
         incrementWrong();
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 400);
       }
     },
     onError: () => {
@@ -118,16 +121,25 @@ function WordGame() {
       <Container
         maxWidth="sm"
         sx={{
-          mt: 6,
-          mb: 6,
-          maxHeight: '90vh',
-          overflowY: 'auto',
+          mt: 2,
+          mb: 2,
+          // maxHeight: '90vh',
+          // overflowY: 'auto',
+          px: 2,
+          py: 4,
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           px: 2,
         }}
       >
         <Paper
           elevation={8}
+          className={isShaking ? 'shake' : ''}
           sx={{
+            width: '100%',
+            maxWidth: 800,
             bgcolor: '#1f2937',
             color: 'white',
             borderRadius: 3,
@@ -136,8 +148,10 @@ function WordGame() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            minHeight: '60vh',
+            // minHeight: '60vh',
             position: 'relative',
+            maxHeight: '95vh',
+            overflowY: 'auto',
           }}
         >
           {/* my new ai generated logo */}
@@ -202,6 +216,7 @@ function WordGame() {
             variant="h4"
             sx={{
               fontWeight: '700',
+              fontSize: { xs: '1.5rem', sm: '2rem' },
               borderBottom: '3px solid #3b82f6',
               pb: 2,
               mb: 3,
@@ -336,7 +351,7 @@ function WordGame() {
             </Link>
           </Box>
         </Paper>
-      </Container>
+      </Container >
     </>
   );
 }
