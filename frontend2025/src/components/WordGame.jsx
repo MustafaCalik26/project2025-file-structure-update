@@ -22,7 +22,6 @@ import { useUser } from '../context/UserContext.jsx';
 import { useScore } from '../context/ScoreContext.jsx';
 import logo from '../background_Homepage/logo.png';
 
-
 function WordGame() {
   const { user } = useUser();
   const navigate = useNavigate();
@@ -34,6 +33,7 @@ function WordGame() {
   const queryClient = useQueryClient();
   const { incrementCorrect, incrementWrong } = useScore();
   const [isShaking, setIsShaking] = useState(false);
+  
 
   useLanguageFromUrl(i18n, searchParams);
 
@@ -41,7 +41,7 @@ function WordGame() {
     if (!user) {
       navigate('/');
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,12 +63,11 @@ function WordGame() {
   const guessMutation = useMutation({
     mutationFn: submitGuess,
     onSuccess: (data) => {
-      setResult(data);
       if (data.toLowerCase().includes('correct')) {
         setResult(t('guess_correct'));
         incrementCorrect();
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        queryClient.invalidateQueries(['word']);
+        queryClient.invalidateQueries(['word', difficulty]);
         queryClient.removeQueries(['hint']);
         setGuess('');
       } else {
@@ -88,6 +87,7 @@ function WordGame() {
     refetch: fetchHintQuery,
     isFetching: hintLoading,
     isError: hintError,
+    error: hintErrorObj,
   } = useQuery({
     queryKey: ['hint'],
     queryFn: fetchHint,
@@ -304,9 +304,15 @@ function WordGame() {
               {t('loading_hint')}
             </Typography>
           ) : hintError ? (
-            <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
-              {t('error_fetching_hint')}
-            </Alert>
+            hintErrorObj?.response?.status === 403 ? (
+              <Alert severity="warning" sx={{ mt: 2, width: '100%' }}>
+                {t('hint_limit_reached')}
+              </Alert>
+            ) : (
+              <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
+                {t('error_fetching_hint')}
+              </Alert>
+            )
           ) : (
             hint && (
               <Typography
@@ -345,4 +351,4 @@ function WordGame() {
   );
 }
 
-export default WordGame; 
+export default WordGame;

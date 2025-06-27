@@ -33,5 +33,6 @@
   "easy": "Kolay",
   "normal": "Normal",
   "hard": "Zor",
-   "remember_me":"Beni Hatırtla"
+   "remember_me":"Beni Hatırtla",
+   "hint_limit_reached": "Bu kelime için tüm ipuçlarını kullandınız."
 }

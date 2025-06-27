@@ -30,8 +30,9 @@
   "correct_count": "Correct Count",
   "wrong_count": "Wrong Count",
   "profile": "Profile",
-   "easy": "Easy",
+  "easy": "Easy",
   "normal": "Normal",
   "hard": "Hard",
-  "remember_me":"Remember Me"
+  "remember_me": "Remember Me",
+  "hint_limit_reached": "You’ve used all available hints for this word."
 }
