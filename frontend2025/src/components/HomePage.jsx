@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { login, register } from '../api/authApi';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ import logo from '../background_Homepage/logo.png';
 export default function HomeForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
@@ -28,7 +29,16 @@ export default function HomeForm() {
   useLanguageFromUrl(i18n, searchParams);
   const { user, setUser } = useUser();
   console.log(user?.username);
-  
+
+
+   useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (token && !user) {
+      setUser({ token });
+      navigate('/game');
+    }
+  }, [user, setUser, navigate]);
+
   //Testing Rn
 
 
@@ -39,9 +49,14 @@ export default function HomeForm() {
 
     try {
       if (isLogin) {
-        const res = await login(username, password);        
+        const res = await login(username, password, rememberMe);
         setUser({ username, token: res.data.token });
-        localStorage.setItem('token', res.data.token);
+        if (rememberMe) {
+          localStorage.setItem('token', res.data.token);
+        }
+        else {
+          sessionStorage.setItem('token', res.data.token);
+        }
         navigate('/game');
       } else {
         await register(username, password);
@@ -79,12 +94,12 @@ export default function HomeForm() {
     }
   };
 
-  
+
 
   return (
     <div className="w-full h-screen flex items-center justify-center text-white">
       <div className="w-[90%] max-w-sm md:max-w-md p-5 bg-gray-900 flex-col flex items-center gap-4 rounded-xl shadow-slate-400 shadow-lg">
-        <img src={logo} alt="logo" className="w-12 md:w-14" />   
+        <img src={logo} alt="logo" className="w-12 md:w-14" />
         <h1 className="text-lg md:text-xl font-semibold">
           {isLogin ? t('login') : t('register')}
         </h1>
@@ -131,7 +146,17 @@ export default function HomeForm() {
               />
             )}
           </div>
-           
+
+          <label className="flex items-center gap-2 text-sm cursor-pointer select-none text-white">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-4 h-4"
+            />
+            {t('remember_me')}
+          </label>
+
           <button
             type="submit"
             disabled={isLoading}

@@ -48,6 +48,10 @@ function WordGame() {
     if (guess.trim() === '') return;
     guessMutation.mutate(guess.trim());
   };
+  const handleFetchNewWord = () => {
+  fetchNewWord();
+  queryClient.removeQueries(['hint']);
+};
 
   const {
     data: scrambled,
@@ -57,7 +61,7 @@ function WordGame() {
   } = useQuery({
     queryKey: ['word', difficulty],
     queryFn: () => fetchWord(difficulty),
-    staleTime: 10000,
+    // staleTime: 10000,
   });
 
   const guessMutation = useMutation({
@@ -284,7 +288,7 @@ function WordGame() {
             justifyContent="center"
             sx={{ mb: 3, width: '100%' }}
           >
-            <Button variant="outlined" color="inherit" onClick={() => fetchNewWord()}>
+            <Button variant="outlined" color="inherit" onClick={(handleFetchNewWord)}>
               {t('new_word')}
             </Button>
             <Button variant="outlined" color="inherit" onClick={() => fetchHintQuery()}>

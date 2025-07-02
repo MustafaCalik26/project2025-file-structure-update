@@ -16,7 +16,8 @@ router.post('/', async (req, res) => {
 
   const username = req.body.username?.trim();
   const password = req.body.password?.trim();
-  
+  const rememberMe = req.body.rememberMe === true;
+
 
   if (!username || !password) {
     return res.status(400).json({ error_code: 'BAD_REQUEST', error: 'Username and password required' });
@@ -26,8 +27,8 @@ router.post('/', async (req, res) => {
   const attempts = parseInt(await redisClient.get(redisKey)) || 0;
   if (attempts >= 5) {
     return res.status(429).json({
-    error_code: 'TOO_MANY_ATTEMPTS',
-    error: 'Too many login attempts. Please try again in a few minutes.',
+      error_code: 'TOO_MANY_ATTEMPTS',
+      error: 'Too many login attempts. Please try again in a few minutes.',
     });
   }
 
@@ -45,8 +46,11 @@ router.post('/', async (req, res) => {
     return res.status(401).json({ error_code: 'INVALID_PASSWORD', error: 'Invalid password' });
   }
   await redisClient.del(redisKey);
+
+  const expiresIn = rememberMe ? '7d' : '2h';
+
   const token = jwt.sign({ id: user._id, username: user.username }, SECRET, {
-    expiresIn: '2h',
+    expiresIn: expiresIn,
   });
 
   res.json({ message: 'Login successful', token });
