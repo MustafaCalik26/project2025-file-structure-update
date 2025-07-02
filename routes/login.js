@@ -52,7 +52,8 @@ router.post('/', async (req, res) => {
   const token = jwt.sign({ id: user._id, username: user.username }, SECRET, {
     expiresIn: expiresIn,
   });
-
+  console.log('rememberMe:', req.body.rememberMe, typeof req.body.rememberMe);
+  console.log('Token expiresIn:', rememberMe ? '7d' : '2h');
   res.json({ message: 'Login successful', token });
 });
 
